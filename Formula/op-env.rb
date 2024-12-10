@@ -8,9 +8,6 @@ class OpEnv < Formula
   license "MIT"
 
   def install
-    if !system("which op >/dev/null 2>&1")
-      odie "1Password CLI (op) is required but not installed. Please install it with: brew install --cask 1password-cli"
-    end
     bin.install "bin/op-env"
   end
 
