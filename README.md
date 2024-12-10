@@ -17,7 +17,12 @@ A shell script to manage environment variables using 1Password.
 
 ## Installation
 
-To: make homebrew package.
+Using Homebrew:
+
+```bash
+brew tap serraict/op-env https://github.com/serraict/op-env
+brew install op-env
+```
 
 ## Usage
 
@@ -25,10 +30,10 @@ The script must be sourced (not executed) to modify environment variables:
 
 ```bash
 # Load variables from 1Password
-source ./op-env/bin/op-env load "Your Vault" "Your Item"
+source op-env load "Your Vault" "Your Item"
 
 # Unset variables that exist in 1Password
-source ./op-env/bin/op-env unset "Your Vault" "Your Item"
+source op-env unset "Your Vault" "Your Item"
 ```
 
 ### Example
@@ -43,7 +48,7 @@ BASE_URL=http://localhost:3000
 
 And a 1Password item containing `API_KEY` and `CLIENT_ID`, running:
 ```bash
-source ./op-env/bin/op-env load "My Vault" "Project Secrets"
+source op-env load "My Vault" "Project Secrets"
 ```
 
 Will:
@@ -55,10 +60,9 @@ Will:
 
 Run the test script to verify functionality:
 ```bash
-./op-env/test/test.sh "Your Vault" "Your Item"
+./test/test.sh "Your Vault" "Your Item"
 ```
 
 ## Backlog
 
-- create Homebrew package
 - extract parameter for .env file
