@@ -8,9 +8,7 @@ class OpEnv < Formula
   license "MIT"
 
   def install
-    # Install from the repository root
-    prefix.install "bin"
-    (bin/"op-env").chmod 0755
+    bin.install "bin/op-env"
   end
 
   test do
