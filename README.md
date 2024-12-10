@@ -24,6 +24,15 @@ brew tap serraict/op-env https://github.com/serraict/op-env
 brew install op-env
 ```
 
+## Upgrading
+
+To upgrade to the latest version:
+
+```bash
+brew update
+brew upgrade op-env
+```
+
 ## Usage
 
 The script must be sourced (not executed) to modify environment variables:
