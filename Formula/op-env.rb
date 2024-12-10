@@ -8,7 +8,7 @@ class OpEnv < Formula
   license "MIT"
 
   depends_on "bash"
-  depends_on "1password-cli"
+  depends_on cask: "1password-cli"
 
   def install
     bin.install "bin/op-env"
