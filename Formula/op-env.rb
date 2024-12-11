@@ -4,7 +4,7 @@ class OpEnv < Formula
   url "https://github.com/serraict/op-env.git",
       using: :git,
       branch: "main"
-  version "0.1.2"
+  version "0.1.3"
   license "MIT"
 
   def install
