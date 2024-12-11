@@ -4,15 +4,24 @@
 # This script reads variable names from .env.example and manages them using 1Password.
 # Only variables that exist in the specified 1Password item will be managed.
 #
+# Configuration can be done via environment variables or command line arguments:
+#   OP_VAULT: The 1Password vault name
+#   OP_ITEM: The 1Password item name
+#
 # This script must be sourced to modify environment variables:
 #
 #   Load variables:
-#     source ./scripts/op-env load VAULT_NAME ITEM_NAME
+#     source ./scripts/op-env load [VAULT_NAME] [ITEM_NAME]
 #
 #   Unset variables:
-#     source ./scripts/op-env unset VAULT_NAME ITEM_NAME
+#     source ./scripts/op-env unset [VAULT_NAME] [ITEM_NAME]
 #
-# Example:
+# Example using environment variables:
+#     export OP_VAULT="My Vault"
+#     export OP_ITEM="Project Credentials"
+#     source ./scripts/op-env load
+#
+# Example using command line arguments:
 #     source ./scripts/op-env load "My Vault" "Project Credentials"
 #
 # Note: The script will remind you if you forget to source it.
@@ -40,6 +49,30 @@ check_op_version() {
     fi
 }
 
+get_vault() {
+    local arg_vault="$1"
+    if [ -n "$OP_VAULT" ]; then
+        echo "$OP_VAULT"
+    elif [ -n "$arg_vault" ]; then
+        echo "$arg_vault"
+    else
+        echo "Error: No vault specified. Set OP_VAULT environment variable or provide as argument." >&2
+        return 1
+    fi
+}
+
+get_item() {
+    local arg_item="$1"
+    if [ -n "$OP_ITEM" ]; then
+        echo "$OP_ITEM"
+    elif [ -n "$arg_item" ]; then
+        echo "$arg_item"
+    else
+        echo "Error: No item specified. Set OP_ITEM environment variable or provide as argument." >&2
+        return 1
+    fi
+}
+
 init_variables() {
     local vault="$1"
     local item="$2"
@@ -59,12 +92,11 @@ init_variables() {
 }
 
 load_credentials() {
-    local vault="$1"
-    local item="$2"
-    if [ -z "$vault" ] || [ -z "$item" ]; then
-        echo "Missing required arguments" >&2
-        return 1
-    fi
+    local vault
+    local item
+    
+    vault=$(get_vault "$1") || return 1
+    item=$(get_item "$2") || return 1
 
     check_op_version || return 1
     init_variables "$vault" "$item"
@@ -78,12 +110,11 @@ load_credentials() {
 }
 
 unset_credentials() {
-    local vault="$1"
-    local item="$2"
-    if [ -z "$vault" ] || [ -z "$item" ]; then
-        echo "Missing required arguments" >&2
-        return 1
-    fi
+    local vault
+    local item
+    
+    vault=$(get_vault "$1") || return 1
+    item=$(get_item "$2") || return 1
 
     check_op_version || return 1
     init_variables "$vault" "$item"
@@ -109,8 +140,12 @@ case "$1" in
         echo "Usage: source $SCRIPT_NAME COMMAND [ARGS]" >&2
         echo "" >&2
         echo "Commands:" >&2
-        echo "  load VAULT_NAME ITEM_NAME    Load environment variables from 1Password" >&2
-        echo "  unset VAULT_NAME ITEM_NAME   Unset environment variables from 1Password" >&2
+        echo "  load [VAULT_NAME] [ITEM_NAME]    Load environment variables from 1Password" >&2
+        echo "  unset [VAULT_NAME] [ITEM_NAME]   Unset environment variables from 1Password" >&2
+        echo "" >&2
+        echo "Environment variables:" >&2
+        echo "  OP_VAULT                         1Password vault name (alternative to VAULT_NAME)" >&2
+        echo "  OP_ITEM                          1Password item name (alternative to ITEM_NAME)" >&2
         return 1
         ;;
 esac
